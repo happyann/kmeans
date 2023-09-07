@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/muesli/clusters"
+	"github.com/happyann/clusters"
 )
 
 // Kmeans configuration/option struct
@@ -19,6 +19,7 @@ type Kmeans struct {
 	// iterationThreshold aborts processing when the specified amount of
 	// algorithm iterations was reached
 	iterationThreshold int
+	seed               uint64
 	rand               *rand.Rand
 }
 
@@ -41,6 +42,7 @@ func NewWithOptions(deltaThreshold float64, plotter Plotter, seed ...uint64) (Km
 		plotter:            plotter,
 		deltaThreshold:     deltaThreshold,
 		iterationThreshold: 96,
+		seed:               seed[0],
 		rand:               rand.New(rand.NewSource(int64(seed[0]))),
 	}, nil
 }
@@ -58,7 +60,7 @@ func (m Kmeans) Partition(dataset clusters.Observations, k int) (clusters.Cluste
 		return clusters.Clusters{}, fmt.Errorf("the size of the data set must at least equal k")
 	}
 
-	cc, err := clusters.New(k, dataset)
+	cc, err := clusters.New(k, dataset, m.seed)
 	if err != nil {
 		return cc, err
 	}

@@ -11,6 +11,32 @@ const (
 	randomSeed = int64(42)
 )
 
+func TestSeed(t *testing.T) {
+	km, err := NewWithOptions(0.01, nil, 42)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	int1 := km.rand.Int()
+	int2 := km.rand.Int()
+	int3 := km.rand.Int()
+
+	km, err = NewWithOptions(0.01, nil, 42)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	if int1 != km.rand.Int() {
+		t.Errorf("Expected same random sequence, got different values")
+	}
+	if int2 != km.rand.Int() {
+		t.Errorf("Expected same random sequence, got different values")
+	}
+	if int3 != km.rand.Int() {
+		t.Errorf("Expected same random sequence, got different values")
+	}
+}
+
 func TestNewErrors(t *testing.T) {
 	_, err := NewWithOptions(0.00, nil)
 	if err == nil {

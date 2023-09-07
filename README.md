@@ -1,11 +1,5 @@
 # kmeans
 
-[![Latest Release](https://img.shields.io/github/release/muesli/kmeans.svg)](https://github.com/muesli/kmeans/releases)
-[![Build Status](https://github.com/muesli/kmeans/workflows/build/badge.svg)](https://github.com/muesli/kmeans/actions)
-[![Coverage Status](https://coveralls.io/repos/github/muesli/kmeans/badge.svg?branch=master)](https://coveralls.io/github/muesli/kmeans?branch=master)
-[![Go ReportCard](https://goreportcard.com/badge/muesli/kmeans)](https://goreportcard.com/report/muesli/kmeans)
-[![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](https://pkg.go.dev/github.com/muesli/kmeans)
-
 k-means clustering algorithm implementation written in Go
 
 ## What It Does
@@ -13,8 +7,6 @@ k-means clustering algorithm implementation written in Go
 [k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering) partitions
 a multi-dimensional data set into `k` clusters, where each data point belongs
 to the cluster with the nearest mean, serving as a prototype of the cluster.
-
-![kmeans animation](https://github.com/muesli/kmeans/blob/master/kmeans.gif)
 
 ## When Should I Use It?
 
@@ -26,7 +18,7 @@ to the cluster with the nearest mean, serving as a prototype of the cluster.
 
 ```go
 import (
-	"github.com/muesli/kmeans"
+	"github.com/happyann/kmeans"
 	"github.com/muesli/clusters"
 )
 
@@ -52,7 +44,7 @@ for _, c := range clusters {
 ## Complexity
 
 If `k` (the amount of clusters) and `d` (the dimensions) are fixed, the problem
-can be exactly solved in time O(n<sup>dk+1</sup>), where `n` is the number of
+can be exactly solved in time O(n `<sup>`dk+1 `</sup>`), where `n` is the number of
 entities to be clustered.
 
 The running time of the algorithm is O(nkdi), where `n` is the number of
@@ -71,18 +63,7 @@ threshold. With the following options the algorithm finishes when less than 5%
 of the data points shifted their cluster assignment in the last iteration:
 
 ```go
-km, err := kmeans.NewWithOptions(0.05, nil)
+km, err := kmeans.NewWithOptions(0.05, nil, [seed])
 ```
 
 The default setting for the delta threshold is 0.01 (1%).
-
-If you are working with two-dimensional data sets, kmeans can generate
-beautiful graphs (like the one above) for each iteration of the algorithm:
-
-```go
-km, err := kmeans.NewWithOptions(0.01, plotter.SimplePlotter{})
-```
-
-Careful: this will generate PNGs in your current working directory.
-
-You can write your own plotters by implementing the `kmeans.Plotter` interface.

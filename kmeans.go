@@ -19,6 +19,7 @@ type Kmeans struct {
 	// iterationThreshold aborts processing when the specified amount of
 	// algorithm iterations was reached
 	iterationThreshold int
+	rand               *rand.Rand
 }
 
 // The Plotter interface lets you implement your own plotters
@@ -27,15 +28,20 @@ type Plotter interface {
 }
 
 // NewWithOptions returns a Kmeans configuration struct with custom settings
-func NewWithOptions(deltaThreshold float64, plotter Plotter) (Kmeans, error) {
+func NewWithOptions(deltaThreshold float64, plotter Plotter, seed ...uint64) (Kmeans, error) {
 	if deltaThreshold <= 0.0 || deltaThreshold >= 1.0 {
 		return Kmeans{}, fmt.Errorf("threshold is out of bounds (must be >0.0 and <1.0, in percent)")
+	}
+
+	if len(seed) == 0 {
+		seed = []uint64{uint64(rand.Int63())}
 	}
 
 	return Kmeans{
 		plotter:            plotter,
 		deltaThreshold:     deltaThreshold,
 		iterationThreshold: 96,
+		rand:               rand.New(rand.NewSource(int64(seed[0]))),
 	}, nil
 }
 
@@ -83,7 +89,7 @@ func (m Kmeans) Partition(dataset clusters.Observations, k int) (clusters.Cluste
 				for {
 					// find a cluster with at least two data points, otherwise
 					// we're just emptying one cluster to fill another
-					ri = rand.Intn(len(dataset)) //nolint:gosec // rand.Intn is good enough for this
+					ri = m.rand.Intn(len(dataset)) //nolint:gosec // rand.Intn is good enough for this
 					if len(cc[points[ri]].Observations) > 1 {
 						break
 					}
